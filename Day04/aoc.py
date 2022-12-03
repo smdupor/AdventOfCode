@@ -4,11 +4,9 @@ from printing import prt_grn, prt_red
 ############################################################ PART 1 ############################################
 def part1():
     fp = open("input.txt","r")
-    result = []
     i = int(0)
     j = int(0)
     subval = 0
-    letters = dict()
 
     for l in fp:
         subval = '\0'
@@ -45,23 +43,7 @@ def part2():
     numstr = len(inp)
     
     for t in range(0,int(numstr/3)):
-        subval = '\0'
-        for j in inp[(t*3)]:
-            for k in inp[(t*3)+1]:
-                for m in inp[(t*3)+2]:
-                    if(j ==k and j == m):
-                        subval = j
-                        break
-                if(subval != '\0'):
-                    break
-            if(subval != '\0'):
-                    break
-        j = ord(subval)
-
-        if(j > 96):
-            i+= j-96
-        else:
-            i+= (j-64)+26
+        continue
 
 
     prt_red(str(i))
