@@ -8,10 +8,7 @@ def part1():
     subval = 0
 
     for st in fp:
-        lhs = st[0:len(st)//2]
-        rhs = st[len(st)//2:]
-        subval = set(lhs).intersection(rhs)
-        i += char_to_val(subval.pop())
+        continue
 
     prt_red(str(i))
 
@@ -20,26 +17,18 @@ def part1_naive():
     result = []
     i = int(0)
     j = int(0)
-    subval = 0
-    letters = dict()
+
+    t = [0,0,0,0]
 
     for l in fp:
-        subval = '\0'
-        length = len(l)-1
-        for k in range (0,int((length/2) )):
-            for m in range(int(length/2),length):
-                if(l[k] == l[m]):
-                    subval = l[k]
-                    break
-            if(subval != '\0'):
-                break
-        
-        j = ord(subval)
+        k = l[0:-1].split(",")
+        t[0] = int(k[0].split("-")[0])
+        t[1] = int(k[0].split("-")[1])
+        t[2] = int(k[1].split("-")[0])
+        t[3] = int(k[1].split("-")[1])
 
-        if(j > 96):
-            i+= j-96
-        else:
-            i+= (j-64)+26
+        if((t[0] <= t[2] and t[1] >= t[3]) or (t[2]<=t[0] and t[3] >= t[1])):
+            i += 1
 
     prt_red(str(i))
 
@@ -53,45 +42,38 @@ def part2():
     numstr = len(inp)
     
     for t in range(0,numstr//3):
-        a = set(inp[(t*3)][0:-1])
-        b = set(inp[((t*3)+1)][0:-1])
-        c = set(inp[((t*3)+2)][0:-1])
-        a.intersection_update(b)
-        a.intersection_update(c)
-        i+= char_to_val(a.pop())
+        continue
 
     prt_red(str(i))
 
 def part2_naive():
     fp = open("input.txt","r")
+    
     result = []
     i = int(0)
     j = int(0)
 
-    subval = 0
-    letters = dict()
-    
-    inp = fp.readlines()
-    numstr = len(inp)
-    
-    for t in range(0,int(numstr/3)):
-        subval = '\0'
-        for j in inp[(t*3)]:
-            for k in inp[(t*3)+1]:
-                for m in inp[(t*3)+2]:
-                    if(j ==k and j == m):
-                        subval = j
-                        break
-                if(subval != '\0'):
-                    break
-            if(subval != '\0'):
-                    break
-        j = ord(subval)
+    t = [0,0,0,0]
 
-        if(j > 96):
-            i+= j-96
-        else:
-            i+= (j-64)+26
+    for l in fp:
+        k = l[0:-1].split(",")
+        t[0] = int(k[0].split("-")[0])
+        t[1] = int(k[0].split("-")[1])
+        t[2] = int(k[1].split("-")[0])
+        t[3] = int(k[1].split("-")[1])
+
+        a = set()
+        for p in range(t[0], t[1]+1):
+            a.add(p)
+        
+        b = set()
+        for p in range(t[2], t[3]+1):
+            b.add(p)
+        
+        a.intersection_update(b)
+
+        if(len(a) >0):
+            i+= 1
 
 
     prt_red(str(i))
