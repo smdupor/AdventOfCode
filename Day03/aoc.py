@@ -1,8 +1,21 @@
 from math import floor, ceil
-from printing import prt_grn, prt_red
+from aocutils import *
 
 ############################################################ PART 1 ############################################
 def part1():
+    fp = open("input.txt","r")
+    i = int(0)
+    subval = 0
+
+    for st in fp:
+        lhs = st[0:len(st)//2]
+        rhs = st[len(st)//2:]
+        subval = set(lhs).intersection(rhs)
+        i += char_to_val(subval.pop())
+
+    prt_red(str(i))
+
+def part1_naive():
     fp = open("input.txt","r")
     result = []
     i = int(0)
@@ -33,6 +46,23 @@ def part1():
 ############################################################ PART 2 ############################################
 
 def part2():
+    fp = open("input.txt","r")
+    i = int(0)
+    
+    inp = fp.readlines()
+    numstr = len(inp)
+    
+    for t in range(0,numstr//3):
+        a = set(inp[(t*3)][0:-1])
+        b = set(inp[((t*3)+1)][0:-1])
+        c = set(inp[((t*3)+2)][0:-1])
+        a.intersection_update(b)
+        a.intersection_update(c)
+        i+= char_to_val(a.pop())
+
+    prt_red(str(i))
+
+def part2_naive():
     fp = open("input.txt","r")
     result = []
     i = int(0)
@@ -68,6 +98,8 @@ def part2():
 
 prt_grn("\nPart 1:")
 part1()
+part1_naive()
 prt_grn("\nPart 2:")
 part2()
+part2_naive()
 print("")

@@ -1,3 +1,4 @@
+dbg_enable = False
 
 def prt_grn(input):
     # colors = dict()
@@ -26,3 +27,17 @@ def prt_red(input):
     # 'UNDERLINE' = '\033[4m']
 
     print('\033[91m' + input + '\033[0m')
+
+def char_to_val(ch):
+    offset_lowcase = 0
+    offset_upcase = 26
+
+    j = ord(ch)
+    if(j > 96):
+        return (j-96) + offset_lowcase
+    else:
+        return (j-64) + offset_upcase
+
+def p(st):
+    if(dbg_enable):
+        print(st)
