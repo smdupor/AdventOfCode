@@ -3,14 +3,15 @@ from aocutils import *
 
 ############################################################ PART 1 ############################################
 def part1():
-    fp = open("input.txt","r")
-    i = int(0)
-    subval = 0
+    # fp = open("input.txt","r")
+    # i = int(0)
+    # subval = 0
 
-    for st in fp:
-        continue
+    # for st in fp:
+    #     continue
 
-    prt_red(str(i))
+    # prt_red(str(i))
+    return
 
 def part1_naive():
     fp = open("input.txt","r")
@@ -19,16 +20,9 @@ def part1_naive():
     j = int(0)
 
     t = [0,0,0,0]
-
-    for l in fp:
-        k = l[0:-1].split(",")
-        t[0] = int(k[0].split("-")[0])
-        t[1] = int(k[0].split("-")[1])
-        t[2] = int(k[1].split("-")[0])
-        t[3] = int(k[1].split("-")[1])
-
-        if((t[0] <= t[2] and t[1] >= t[3]) or (t[2]<=t[0] and t[3] >= t[1])):
-            i += 1
+    lines = fp.readlines()
+    for k in range(0, 8):
+        print(str(k))
 
     prt_red(str(i))
 
