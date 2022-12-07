@@ -12,7 +12,7 @@ def prt_grn(input):
     # 'BOLD' = '\033[1m',
     # 'UNDERLINE' = '\033[4m']
 
-    print('\033[92m' + input + '\033[0m')
+    print('\033[92m' + str(input) + '\033[0m')
 
 def prt_red(input):
     # colors = dict()
@@ -26,7 +26,7 @@ def prt_red(input):
     # 'BOLD' = '\033[1m',
     # 'UNDERLINE' = '\033[4m']
 
-    print('\033[91m' + input + '\033[0m')
+    print('\033[91m' + str(input) + '\033[0m')
 
 def prt_nocrlf_red(input):
     # colors = dict()
@@ -40,7 +40,7 @@ def prt_nocrlf_red(input):
     # 'BOLD' = '\033[1m',
     # 'UNDERLINE' = '\033[4m']
 
-    print('\033[91m' + input + '\033[0m', end="")
+    print('\033[91m' + str(input) + '\033[0m', end="")
 
 def char_to_val(ch):
     offset_lowcase = 0
