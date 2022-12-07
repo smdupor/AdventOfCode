@@ -21,11 +21,27 @@ def part1():
 def part1_naive():
     fp = open("input.txt","r")
     text = fp.read()
-    data = text.split("\n")
-    
-    fp.close()
-    
+    pkt = deque()
+    ind = deque()
 
+    for i in range(0,len(text)):
+        
+        # Exit condition
+        if len(pkt) == 4:
+            prt_red(i-2)
+            return
+        
+        # Slide the window forward if not found
+        # By popping only if a unique character is exiting the window
+        if len(pkt) >0 and ind[0] == i-4:
+            ind.popleft()
+            pkt.popleft()
+        
+        #Then pushing if a unique character is about to enter
+        if text[i] not in pkt:
+            pkt.append(text[i])
+            ind.append(i)
+        
 ############################################################ PART 2 ############################################
 
 def part2():
