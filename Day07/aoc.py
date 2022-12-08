@@ -5,43 +5,60 @@ from itertools import *
 
 ############################################################ PART 1 ############################################
 def part1():
+    return
+
+
+def part1_naive():
     fp = open("input.txt","r")
     text = fp.read()
     data = text.split("\n")
-
-    dirs = deque()
-
-    sizes = dict()
-
-    curr = ""
     data = data[:-1]
+    
+    dirs = deque()
+    sizes = dict()
+    curr = ""
+    
     n=0
     for d in data:
         n+=1
+
+        # State: Exiting a directory upward. Commit the counted bytes to this directory and its direct parent only.
         if d[0:7] == "$ cd ..":
-            print(d)
             dirs.pop()
             currsz = sizes[curr]
             curr = ""
             for d in dirs:
                 curr = curr + d 
-                sizes[curr] += currsz
+            sizes[curr] += currsz
+        
+        # State: Entering a subdirectory. Initialize size and full-path name of the subdirectory
         elif d[0:5] == "$ cd ":
-            print(d)
             dirs.append(d[5:])
-            print(dirs)
             curr = ""
             for d in dirs:
                 curr = curr + d 
             sizes[curr] = 0
-            
-
+        
+        # State: Swallow "ls" commands and "dir" listings
         elif d[0:4] == "dir " or d[0:4]=="$ ls":
             t=0
+        
+        # State: Found a file. Capture number of bytes into current working directory total.
         else:
-            print(d)
             sizes[curr] += int(d.split(" ")[0])
 
+    # Because we can stop without committing upwards all the way to root, for the last branch searched
+    # Pop all directories up to root, committing the last set of byte counts
+    while len(dirs) > 1:
+        dirs.pop()
+        currsz = sizes[curr]
+        curr = ""
+        for d in dirs:
+            curr = curr + d 
+
+        sizes[curr] += currsz
+
+    # Part 1: Compile sum of sizes of dirs < 100k bytes
     n=0
     m=0
     for s in sizes:
@@ -49,118 +66,38 @@ def part1():
             n += 1
             m += sizes[s]
 
-    prt_red(n)
     prt_red(m)
 
-
-
-def part1_naive():
-    fp = open("input.txt","r")
-    text = fp.read()
-
-    return
-
-    fp.close()  
-############################################################ PART 2 ############################################
-
-def part2():
-    fp = open("input.txt","r")
-    text = fp.read()
-    data = text.split("\n")
-
-    dirs = deque()
-
-    sizes = dict()
-
-    sizes_uniq = dict()
-    curr = ""
-    data = data[:-1]
-    n=0
-    prevdd = False
-    for d in data:
-        n+=1
-        if d[0:7] == "$ cd ..":
-            #print(d)
-            dirs.pop()
-            #if not prevdd:
-            currsz = sizes[curr]
-            sizes_uniq[curr] = sizes[curr]
-             #   prevdd = True
-                #for d in dirs:
-                    #sizes[curr] += currsz
-            
-            curr = ""
-            for d in dirs:
-                curr = curr + d 
-            sizes[curr] += currsz
-                
-        elif d[0:5] == "$ cd ":
-            prevdd = False
-            #print(d)
-            dirs.append(d[5:])
-            #print(dirs)
-            curr = ""
-            for d in dirs:
-                curr = curr + d 
-            sizes[curr] = 0
-            
-
-        elif d[0:4] == "dir " or d[0:4]=="$ ls":
-            t=0
-        else:
-            #print(d)
-            sizes[curr] += int(d.split(" ")[0])
-    
-
-
-    while len(dirs) > 1:
-        dirs.pop()
-        
-        currsz = sizes[curr]
-        sizes_uniq[curr] = sizes[curr]
-    
-    
-        curr = ""
-        for d in dirs:
-            curr = curr + d 
-    
-        sizes[curr] += currsz
-
-    
+    # Part 2: Figure out  the smallest directory to free, to have 3mm Bytes, or more, available
+    prt_grn("Part 2:")
     n=0
     m=2**32
 
-    print(70000000 - sizes["/"])
-
     cnst = 30000000 - (70000000 - sizes["/"])
-            
-    prt_grn(cnst)
 
     for s in sizes:
-        
-        if sizes[s] > cnst:
-            print(sizes[s])
-            if sizes[s]<m:
+        if sizes[s] > cnst and sizes[s]<m:
                 m = sizes[s]
-                
 
-    prt_red(n)
     prt_red(m)
+    fp.close()
 
-    #print(sizes)
+############################################################ PART 2 ############################################
+
+def part2():
+    return
+
 
 def part2_naive():
     fp = open("input.txt","r")
     text = fp.read()
-
-    return
 
     fp.close()
 
 prt_grn("\nPart 1:")
 part1()
 part1_naive()
-prt_grn("\nPart 2:")
-part2()
-part2_naive()
-print("")
+# prt_grn("\nPart 2:")
+# part2()
+# part2_naive()
+# print("")
