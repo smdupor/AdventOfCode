@@ -83,7 +83,7 @@ def part1_naive():
     viewmax = 0
     for i in range(1, len(viz[0])-1):
         for j in range(1,len(viz)-1):
-            view = get_view(i,j,mtx)
+            view = search_views(i,j,mtx)
             if viewmax < view:
                 viewmax = view
     prt_grn("Part 2:")
@@ -91,7 +91,7 @@ def part1_naive():
 
     fp.close()  
 
-def get_view(i,j,mtx):
+def search_views(i,j,mtx):
     # South
     s=0
     for k in range(j+1, len(mtx)):
