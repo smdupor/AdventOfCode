@@ -18,42 +18,78 @@ def part1_naive():
     data = text.split("\n")
     data = data[:-1]
 
-    # Set up both a matrix of the treemap, and a visibility matrix (Initialize as all-invisible)
-    mtx = []
-    viz = []
-    i=-1
+    r = 1
+    cycles = 1
+    signal = dict()
+
+    target = 20
+
+    crt = []
+    for i in range(0,6):
+        crt.append([])
+        for j in range(0,40):
+            crt[i].append(" ")            
+
     for d in data:
-        mtx.append([])
-        viz.append([])
-        i += 1
-        for e in d:
-            mtx[i].append(int(e))
-            viz[i].append(0)
 
-
-    # Make all four edges visible
-    for i in range(0, len(viz[0])):
-        viz[0][i] = 1
-        viz[len(viz)-1][i] = 1
-    for i in range(0, len(viz)):
-        viz[i][0] = 1
-        viz[i][len(viz[0])-1] = 1
-
-
+        a = d.split(" ")
+        if a[0] == "addx":
+            # print(str(int(a[1])) + " and r = " + str(r))
+            [signal, target] = signal_level(cycles, signal, target, r)
+            crt = draw(r,crt,cycles)
+            cycles += 1
+            [signal, target] = signal_level(cycles, signal, target, r)
+            crt = draw(r,crt,cycles)
+            cycles += 1
+            r += int(a[1])
+        else:
+            [signal, target] = signal_level(cycles, signal, target, r)
+            crt = draw(r,crt,cycles)
+            cycles += 1
+        
     
-    # Part 1 Soln
-    sum=0
-    for v in viz:
-        for u in v:
-                sum += u
+    sum = signal[20]
+    # print(signal)
+    for i in range(1,6):
+        # print(20+(i*40))
+        sum += signal[20+(i*40)]
+
+
     prt_red(sum)
 
     # Part 2
     
     prt_grn("Part 2:")
+
+    print(cycles)
+
+    for i in range(0,6):
+        for j in range(0,40):
+            print(crt[i][j], end="")
+        print(" ")
     
 
     fp.close()  
+
+def draw(r, crt, cycles):
+    row = (cycles-1) // 40
+    col = (cycles-1) % 40
+    if col == r - 1 or col == r or col == r+1:
+        crt[row][col] = "#"
+    else:
+        crt[row][col] = "."
+    return crt
+
+def signal_level(cycles, signal,target,r):
+    if target == 20 and cycles == 20:
+        # print(cycles)
+        signal[cycles] = (cycles * r)
+        target += 40
+    elif target > 20 and cycles == target:
+        # print(cycles)
+        signal[cycles] = (cycles * r)
+        target += 40
+    return [signal, target]
 ############################################################ PART 2 ############################################
 
 def part2():
