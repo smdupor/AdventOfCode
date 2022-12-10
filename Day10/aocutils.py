@@ -1,5 +1,13 @@
 dbg_enable = False
 
+def setup_mtx(m,n,init):
+    matrix = []
+    for i in range(0,m):
+        matrix.append([])
+        for j in range(0,n):
+            matrix[i].append(init)
+    return matrix
+
 def prt_grn(input):
     # colors = dict()
     # colors ['HEADER'] = '\033[95m',
