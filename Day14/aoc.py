@@ -6,13 +6,42 @@ def aoc_day11():
     fp.close() 
     data=text[:-1].split("\n")
 
-    mtx = setup_mtx(200,200, ".")
-    start_sand = [0,100]
-    mtx[0][100] = "+"
-    draw(data,mtx)
-
-        
+    mtx = setup_mtx(175,175, ".")
+    start_sand = [0,25]
+    mtx[0][25] = "+"
+    mtx = draw(data,mtx)
+    mtx = drop_sand(start_sand,mtx)
+    for m in mtx:
+        for n in m:
+            print(n,end="")
+        print("")
     prt_grn(passes)
+
+def drop_sand(entry,mtx):
+    count = 0
+    while(True):
+        count += 1
+        coord = entry
+        while(mtx[coord[0]+1][coord[1]] == "."):
+            coord[0] += 1
+            if coord[0] == 175:
+                return mtx
+        if mtx[coord[0]+1][coord[1]] == "#":
+            mtx[coord[0]+1][coord[1]] = "O"
+        elif mtx[coord[0]+1][coord[1]] == "O":
+            if mtx[coord[0]+1][coord[1]-1] == ".":
+                mtx[coord[0]+1][coord[1]-1] = "O"
+            elif mtx[coord[0]+1][coord[1]+1] == ".":
+                mtx[coord[0]+1][coord[1]+1] = "O"
+            elif mtx[coord[0]+1][coord[1]-2] == ".":
+                mtx[coord[0]+1][coord[1]-2] = "O"
+            elif mtx[coord[0]+1][coord[1]+2] == ".":
+                mtx[coord[0]+1][coord[1]+2] = "O"
+        
+        if count == 50:
+            return mtx
+            
+
 
 def draw(data,mtx):
     imin = 1000
@@ -35,11 +64,11 @@ def draw(data,mtx):
                 jlow = int(L[0])
                 jhi = int(R[0])
             if int(L[1]) >= int(R[1]):
-                ilow = int(R[1])-450
-                ihi = int(L[1])-450
+                ilow = int(R[1])-475
+                ihi = int(L[1])-475
             else:
-                ilow = int(L[1])-450
-                ihi = int(R[1])-450
+                ilow = int(L[1])-475
+                ihi = int(R[1])-475
             
             if ilow < imin:
                 imin=ilow
@@ -64,6 +93,8 @@ def draw(data,mtx):
     print(imax)
     print(jmin)
     print(jmax)
+
+    return mtx
 
 # prt_grn("\nPart 1:")
 aoc_day11()
