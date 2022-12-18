@@ -3,7 +3,7 @@ from printed_parsing import *
 import os
 import numpy as np
 from multiprocessing import Process
-
+from multiprocessing import Condition
 SENS = X = 0
 BEAC = Y = 1
 
@@ -17,13 +17,18 @@ def aoc_day15():
     num_thr = 12
     thr = []
     block = (len(tupl) // num_thr) + 1
+    killall = Condition();
+    killall.acquire()
     for i in range(0,num_thr):
         if i*block < len(tupl):
-            t = Process(target=part2, args=(tupl,np.array([0,0]), 4000000, i*block, (i+1)*block))
+            t = Process(target=part2, args=(tupl,np.array([0,0]), 4000000, i*block, (i+1)*block, killall))
             thr.append(t)
             t.start()
+    killall.wait()
+    for tr in thr:
+        tr.kill()
 
-def part2(tupl, coord, dist, start, end):
+def part2(tupl, coord, dist, start, end, killall):
     ring = []
     count_lo = 1
     for z in range(start, end):
@@ -78,10 +83,9 @@ def part2(tupl, coord, dist, start, end):
             c[1] += 1
     # prt_red(ring)
     if len(ring) > 0:
-        prt_red("Tuning Frequency: " + str((ring[0]*4000000) + ring[1]))
+        prt_red("Tuning Frequency: " + str((ring[0][0]*4000000) + ring[1][1]))
+        killall.notify_all()
         exit()
-    else:
-        return [False,[]]
 
 def part1(tupl):
     coord = np.array([0,10])
@@ -120,9 +124,6 @@ def get_manh_dist(root,tst):
     dist = np.array(tst) - np.array(root)
     dist = [abs(dist[X]), abs(dist[Y])]
     return dist[X] + dist[Y]
-
-
-
 
 def parse_input(data):
     tupl = []
