@@ -13,19 +13,10 @@ def aoc_day15():
     fp.close() 
     data=text[:-1].split("\n")
     tupl = parse_input(data)
-    # for t in tupl:
-    #     print(t)
-    # print(get_manh_dist(tupl[0][0][0], tupl[0][0][1]))
-    # print(tupl[0])
-    
-    
-    # part2(tupl, np.array([0,0]), 4000000)
-    num_thr = 48
+
+    num_thr = 12
     thr = []
     block = (len(tupl) // num_thr) + 1
-    # print(block)
-    # print(len(tupl))
-    # exit()
     for i in range(0,num_thr):
         if i*block < len(tupl):
             t = Process(target=part2, args=(tupl,np.array([0,0]), 4000000, i*block, (i+1)*block))
@@ -34,22 +25,14 @@ def aoc_day15():
 
 def part2(tupl, coord, dist, start, end):
     ring = []
-    # mtx = setup_mtx(75 ,150,".")
-  
     count_lo = 1
-    count = len(tupl)
     for z in range(start, end):
         t = tupl[z]
         c = t[0][0].copy()
         c[0] -= (t[1]+1)
-        # print(c)
-        # print(t)
         prt_grn("testing tuple " + str(z) + " out of " + str(end))
         count_lo += 1
         while c[0] < t[0][0][0]:
-            
-            # ring.append(c.copy())
-            #print(get_manh_dist(c,t[0][0]))
             if  0<=c[0] <= dist and 0<= c[1] <= dist:
                 test = True
                 for tau in tupl:
@@ -61,7 +44,6 @@ def part2(tupl, coord, dist, start, end):
             c[0] += 1
             c[1] += 1
         while c[1] >= t[0][0][1]:
-            # ring.append(c.copy())
             if  0<=c[0] <= dist and 0<= c[1] <= dist:
                 test = True
                 for tau in tupl:
@@ -73,7 +55,6 @@ def part2(tupl, coord, dist, start, end):
             c[0] += 1
             c[1] -= 1
         while c[0] > t[0][0][0]:
-            # ring.append(c.copy())
             if  0<=c[0] <= dist and 0<= c[1] <= dist:
                 test = True
                 for tau in tupl:
@@ -85,7 +66,6 @@ def part2(tupl, coord, dist, start, end):
             c[0] -= 1
             c[1] -= 1
         while c[1] < t[0][0][1]:
-            # ring.append(c.copy())
             if  0<=c[0] <= dist and 0<= c[1] <= dist:
                 test = True
                 for tau in tupl:
@@ -96,32 +76,13 @@ def part2(tupl, coord, dist, start, end):
                     ring.append(c.copy())            
             c[0] -= 1
             c[1] += 1
+    # prt_red(ring)
+    if len(ring) > 0:
+        prt_red("Tuning Frequency: " + str((ring[0]*4000000) + ring[1]))
+        exit()
+    else:
+        return [False,[]]
 
-    prt_red(ring)
-    
-
-
-    # for r in ring:
-    #     if r[0] > 0 and r[1] > 0:
-    #         test = True
-    #         for t in tupl:
-    #             mtx[t[0][0][1]+40][t[0][0][0]+40]="o"
-    #             if get_manh_dist(r,t[0][0]) < t[1]:
-    #                 test=False
-    #         if test:
-    #             prt_red(r)
-    #             exit()
-                    
-    #    # print(ring)
-    #     # mtx = setup_mtx(150,150,".")
-    #     for r in ring:
-    #         mtx[r[1]+40][r[0]+40] = "x"
-    #     mtx[t[0][0][1]+40][t[0][0][0]+40]="o"
-    #     for m in mtx:
-    #         for n in m:
-    #             print(n, end="")
-    #         print("")
-    #     exit()
 def part1(tupl):
     coord = np.array([0,10])
     gap = 0
