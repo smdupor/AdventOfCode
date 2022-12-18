@@ -20,7 +20,7 @@ def aoc_day15():
     
     
     # part2(tupl, np.array([0,0]), 4000000)
-    num_thr = 12
+    num_thr = 48
     thr = []
     block = (len(tupl) // num_thr) + 1
     # print(block)
