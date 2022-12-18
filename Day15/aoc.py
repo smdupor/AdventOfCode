@@ -24,9 +24,6 @@ def aoc_day15():
             t = Process(target=part2, args=(tupl,np.array([0,0]), 4000000, i*block, (i+1)*block, killall))
             thr.append(t)
             t.start()
-    killall.wait()
-    for tr in thr:
-        tr.kill()
 
 def part2(tupl, coord, dist, start, end, killall):
     ring = []
@@ -81,10 +78,9 @@ def part2(tupl, coord, dist, start, end, killall):
                     ring.append(c.copy())            
             c[0] -= 1
             c[1] += 1
-    # prt_red(ring)
+        
     if len(ring) > 0:
         prt_red("Tuning Frequency: " + str((ring[0][0]*4000000) + ring[1][1]))
-        killall.notify_all()
         exit()
 
 def part1(tupl):
