@@ -10,7 +10,7 @@ BEAC = Y = 1
 #1963 is TOO LOW
 
 def aoc_day16():
-    fp = open("input.txt","r")
+    fp = open("testinput.txt","r")
     text = fp.read()
     fp.close() 
     [qty, data] = parse_input(text[:-1].split("\n"))
@@ -35,97 +35,61 @@ def part2(qty, data,p1):
     
     subtr = 0
     
-    # for d in data:
-    #     for k in range(d[0]-1, -1, -1):
-    #         if mtx[k][d[1]][d[2]] == "X":
-    #             subtr -= 1
-    #             break
-    #     for k in range(d[0]+1, 20):
-    #         if mtx[k][d[1]][d[2]] == "X":
-    #             subtr -= 1
-    #             break
-    #     for k in range(d[1]-1, -1, -1):
-    #         if mtx[d[0]][k][d[2]] == "X":
-    #             subtr -= 1
-    #             break
-    #     for k in range(d[1]+1, 20):
-    #         if mtx[d[0]][k][d[2]] == "X":
-    #             subtr -= 1
-    #             break
-    #     for k in range(d[2]-1, -1, -1):
-    #         if mtx[d[0]][d[1]][k] == "X":
-    #             subtr -= 1
-    #             break
-    #     for k in range(d[2]+1, 20):
-    #         if mtx[d[0]][d[1]][k] == "X":
-    #             subtr -= 1
-    #             break
-    #     print(subtr)
-    #     print(d)
-    
     
     for i in range(0, 20):
         for j in range(0, 20):
             for k in range(0, 20):
-                if mtx[i][j][k] == " ":
-                    test = True
-                    
-                    i2=i
-                    while i2 >= 0:
-                        if mtx[i2][j][k] == "X":
-                            break
-                        i2 -= 1
-                    if i2 == -1:
-                        test = False
-                    i2=i
-                    while i2 < 20:
-                        if mtx[i2][j][k] == "X":
-                            break
-                        i2 += 1
-                    if i2 == 20:
-                        test = False
-                    
-                    j2=j
-                    while j2 >= 0:
-                        if mtx[i][j2][k] == "X":
-                            break
-                        j2 -= 1
-                    if j2 == -1:
-                        test = False
-                    j2=j
-                    while j2 < 20:
-                        if mtx[i][j2][k] == "X":
-                            break
-                        j2 += 1
-                    if j2 == 20:
-                        test = False
-                    
-                    k2=k
-                    while k2 >= 0:
-                        if mtx[i][j][k2] == "X":
-                            break
-                        k2 -= 1
-                    if k2 == -1:
-                        test = False
-                    k2=i
-                    while k2 < 20:
-                        if mtx[i][j][k2] == "X":
-                            break
-                        k2 += 1
-                    if k2 == 20:
-                        test = False
-                    if test == True:
-                        subtr += num_sides_touch([i,j,k],mtx)
-    print(p1-subtr)
+                if mtx[i][j][k] == "X":
+                    break
+                subtr += num_sides_touch_k([i,j,k],mtx)
+    for i in range(0, 20):
+        for j in range(0, 20):
+            for k in range(19, -1,-1):
+                if mtx[i][j][k] == "X":
+                    break
+                subtr += num_sides_touch_k([i,j,k],mtx)
+    for i in range(0, 20):
+        for k in range(0, 20):
+            for j in range(0, 20):
+                if mtx[i][j][k] == "X":
+                    break
+                subtr += num_sides_touch_j([i,j,k],mtx)
+    for i in range(0, 20):
+        for k in range(0, 20):
+            for j in range(19, -1,-1):
+                if mtx[i][j][k] == "X":
+                    break
+                subtr += num_sides_touch_j([i,j,k],mtx)
+    print(subtr)
 
-def num_sides_touch(d,mtx):
+def num_sides_touch_k(d,mtx):
     q = 0
-    q += 1 if mtx[d[0]-1][d[1]][d[2]] == "X" else 0
-    q += 1 if mtx[d[0]+1][d[1]][d[2]] == "X" else 0
-    q += 1 if mtx[d[0]][d[1]-1][d[2]] == "X" else 0
-    q += 1 if mtx[d[0]][d[1]+1][d[2]] == "X" else 0
-    q += 1 if mtx[d[0]][d[1]][d[2]-1] == "X" else 0
-    q += 1 if mtx[d[0]][d[1]][d[2]+1] == "X" else 0
+    q += 1 if d[0]>0 and mtx[d[0]-1][d[1]][d[2]] == "X" else 0
+    q += 1 if d[0]<19 and mtx[d[0]+1][d[1]][d[2]] == "X" else 0
+    q += 1 if d[1]>0 and mtx[d[0]][d[1]-1][d[2]] == "X" else 0
+    q += 1 if d[1]<19 and mtx[d[0]][d[1]+1][d[2]] == "X" else 0
+    # q += 1 if d[2]>0 and mtx[d[0]][d[1]][d[2]-1] == "X" else 0
+    # q += 1 if d[2]<19 and mtx[d[0]][d[1]][d[2]+1] == "X" else 0
+    return q
+
+def num_sides_touch_j(d,mtx):
+    q = 0
+    q += 1 if d[0]>0 and mtx[d[0]-1][d[1]][d[2]] == "X" else 0
+    q += 1 if d[0]<19 and mtx[d[0]+1][d[1]][d[2]] == "X" else 0
+    # q += 1 if d[1]>0 and mtx[d[0]][d[1]-1][d[2]] == "X" else 0
+    # q += 1 if d[1]<19 and mtx[d[0]][d[1]+1][d[2]] == "X" else 0
+    q += 1 if d[2]>0 and mtx[d[0]][d[1]][d[2]-1] == "X" else 0
+    q += 1 if d[2]<19 and mtx[d[0]][d[1]][d[2]+1] == "X" else 0
+    return q
+
+def num_sides_touch_i(d,mtx):
+    q = 0
+    # q += 1 if d[0]>0 and mtx[d[0]-1][d[1]][d[2]] == "X" else 0
+    # q += 1 if d[0]<19 and mtx[d[0]+1][d[1]][d[2]] == "X" else 0
+    q += 1 if d[1]>0 and mtx[d[0]][d[1]-1][d[2]] == "X" else 0
+    q += 1 if d[1]<19 and mtx[d[0]][d[1]+1][d[2]] == "X" else 0
+    q += 1 if d[2]>0 and mtx[d[0]][d[1]][d[2]-1] == "X" else 0
+    q += 1 if d[2]<19 and mtx[d[0]][d[1]][d[2]+1] == "X" else 0
     return q
 
 def part1(qty, data):

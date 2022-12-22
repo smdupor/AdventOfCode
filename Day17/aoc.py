@@ -25,30 +25,60 @@ def part1(ops, blocks):
     bcount = 0
     floor = [1,1,1,1,1,1,1]
 
-    while bcount <= 2022:
-        prevblock = currblock
+    while bcount <= 2:
+        # prevblock = currblock
+        
         currblock = blocks[bptr].copy()
-        bptr = bptr + 1 if bptr <= 4 else 0
-
+        print(currblock)
+        print(floor)
+        print(fptr)
+        bptr = bptr + 1 if bptr < 4 else 0
+        # prt_grn(bptr)
         insert = fptr+7
         for j in range(0, len(currblock[0])):
             for i in range(0,len(currblock)):
                 if currblock[i][j] == 1:
                     currblock[i][j] = insert - i
-        while True:
+        stop = False
+        while not stop:
             currblock = lsh(currblock) if ops[optr] else rsh(currblock)
             optr = optr + 1 if optr < len(ops)-1 else 0
-            if sum(currblock[len(currblock)])>0:
+            if sum(currblock[len(currblock)-1])>0:
                 stop =  False
-                for b,i in enumerate(currblock[len(currblock)-1]):
+                for i,b in enumerate(currblock[len(currblock)-1]):
                     if b > 0 and  floor[i] > 0:
                         stop = True
                         break
                 if stop:
-                    # Search from top down to find the top location of the new floor
+                    cont = True
+                    for i in range(0, len(currblock)):
+                        if cont:
+                            for j in range(0, len(currblock[0])):
+                                if currblock[i][j] != 0:
+                                    fptr = currblock[i][j]
+                                    break
+        bcount += 1
+        # print(bcount)
+        print(currblock)
+    print(currblock)
 
-                    #Implement lsh and rsh to shift the block
+def rsh(blk):
+    for i in range(0, len(blk)-1):
+        if blk[i][len(blk[0])-1] != 0:
+            return blk
+    for j in range(len(blk[0])-1, -1, -1):
+        for i in range(0, len(blk)):
+            blk[i][j] = blk[i][j-1]
+    return blk
 
+def lsh(blk):
+    for i in range(0, len(blk)-1):
+        if blk[i][0] != 0:
+            return blk
+    for j in range(0,len(blk[0])-1):
+        for i in range(0, len(blk)):
+            blk[i][j] = blk[i][j+1]
+    return blk
 
 def make_blocks():
     blocks = []
