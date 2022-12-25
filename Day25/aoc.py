@@ -16,12 +16,21 @@ def p1(strings):
     lookup["0"] = 0
     lookup["1"] = 1
     lookup["2"] = 2
+    
+    rlookup = dict()
+    rlookup[-2] = "="
+    rlookup[-1] = "-"
+    rlookup[0] = "0"
+    rlookup[1] = "1"
+    rlookup[2] = "2"
+
     sum = 0
     for s in strings:
         add = from_snafu(s, lookup)
         sum += add
+    
     prt_grn("Merry Christmas! Day 25 Part 1: ")
-    prt_red(to_snafu(sum, lookup))
+    prt_red(to_snafu(sum, rlookup))
 
 def from_snafu(string, lookup):
     value = 0
@@ -29,7 +38,7 @@ def from_snafu(string, lookup):
         value += 5**i * lookup[s]
     return value
 
-def to_snafu(value, lookup):
+def to_snafu(value, rlookup):
     subtotal = 0
     i = 0
 
@@ -39,12 +48,7 @@ def to_snafu(value, lookup):
         i += 1
     i -= 1
 
-    rlookup = dict()
-    rlookup[-2] = "="
-    rlookup[-1] = "-"
-    rlookup[0] = "0"
-    rlookup[1] = "1"
-    rlookup[2] = "2"
+
 
     # Assume each digit is maxed out at 2 x 5 ** digit
     digits_totaled = []
