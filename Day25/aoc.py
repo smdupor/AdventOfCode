@@ -48,8 +48,6 @@ def to_snafu(value, rlookup):
         i += 1
     i -= 1
 
-
-
     # Assume each digit is maxed out at 2 x 5 ** digit
     digits_totaled = []
     digits_multiplier = []
