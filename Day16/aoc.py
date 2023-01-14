@@ -13,9 +13,123 @@ def aoc_day16():
     fp.close() 
     data=text[:-1].split("\n")
     [tupl,key] = parse_input(data)
+    #print(tupl)
+    #print(key)
+    floyd = Floyd(tupl,key)
+    # print(floyd.get_shortest_path('AA','CC'))
+    # print(floyd.get_shortest_cost('AA','CC'))
     #part1(tupl,key)
-    p1(tupl,key)
-   
+   # p1(tupl,key)
+    pa1(tupl,key,floyd)
+
+def pa1(tupl,key,floyd):
+    src = 'AA'
+    timestep = 1
+    overall_flow = 0
+    
+    while timestep <=30:
+        [path,best] = find_max_profit(tupl, key, floyd, src)
+        path.reverse()
+        print(timestep)
+        if len(path) != 0:
+            while len(path) != 0:
+                print(path)
+                next = path.pop()
+                if tupl[next]['status'] == False and tupl[next]['rate'] > 0:
+                    timestep += 2
+                    overall_flow *=3
+                    overall_flow += tupl[next]['rate']
+                else:
+                    timestep += 1
+                    overall_flow *= 2
+                src = next
+        else:
+            timestep += 1
+            overall_flow *= 2
+    print(overall_flow)
+        
+
+def find_max_profit(tupl, key, floyd, src):
+    max_ratio = 0.0
+    max_path = []
+    max_rate = 0
+    for k in key:
+        print(k)
+        path = floyd.get_shortest_path(src,k)
+        profit = 0
+        steps = 0
+        for p in path:
+            steps += 1
+            if tupl[p]['status'] == False:
+                profit += tupl[p]['rate']
+                if tupl[p]['rate']>max_rate: max_rate = tupl[p]['rate']
+        ratio = profit / steps
+        if ratio > max_ratio:         
+            max_ratio = ratio
+            max_path = path
+    return [max_path, max_rate]
+
+
+class Floyd:
+    costs = []
+    paths = []
+    keys = []
+    def __init__(self,tupl,key):
+        costM = setup_mtx(len(key), len(key), 2**32)
+        self.keys = key.copy()
+        #print(costM)
+        paths = dict()
+        path = setup_mtx(len(key), len(key), -1)
+        for i,entry in enumerate(tupl):
+            for c in tupl[entry]['child']:
+                costM[i][key.index(c)] = 1
+                costM[key.index(c)][i] = 1
+                path[i][key.index(c)] = c
+                path[key.index(c)][i] = c
+        #print(path)
+        for i in range(0, len(key)):
+            for j in range(0, len(key)):
+                if i == j:
+                    path[i][j] = key[i]
+                    costM[i][j] = 0
+        # for p in path: print(p)
+        for k in range(0, len(key)):
+            for i in range(0, len(key)):
+                for j in range(0, len(key)):
+                    if costM[i][k] + costM[k][j] < costM[i][j]:
+                        costM[i][j] = costM[i][k] + costM[k][j]
+                        path[i][j] = key[k]
+                        #path[j][i] = key[k]
+        # for p in path: print(p)
+        # for c in costM: print(c)
+        self.costs = costM.copy()
+        self.paths = path.copy()                        
+
+        # return paths
+    def get_shortest_path(self,src,dest):
+        src_ind = self.keys.index(src)
+        dest_ind = self.keys.index(dest)
+        path = []
+        cost = self.costs[src_ind][dest_ind]
+        while True:
+            if self.paths[src_ind][dest_ind] == src:
+                path.reverse()
+                path.append(dest)
+                return path
+            path.append(self.paths[src_ind][dest_ind])
+            # print(path)
+            tmp=dest_ind
+            dest_ind = self.keys.index(self.paths[src_ind][dest_ind])
+    def get_shortest_cost(self,src,dest):
+        src_ind = self.keys.index(src)
+        dest_ind = self.keys.index(dest)
+        return self.costs[src_ind][dest_ind]    
+
+
+
+    
+
+
 def p1(tupl,key):
     ptr = "AA"
     tick = 1
