@@ -5,11 +5,11 @@ from printed_parsing import *
 import re
 
 def aoc():
-    fp = open("debug","r")
+    fp = open("input","r")
     text = fp.read()
     fp.close()
     strings = parse_input(text[:-1])
-    # p1(strings)
+    p1(strings)
     p2(strings)
 
 def p1(strings):
@@ -50,12 +50,19 @@ def p2(strings):
 
     result = 0
     for s in strings:
-        vals = re.findall("[0-9]|one|two|three|four|five|six|seven|eight|nine", s)
-        print(vals)
-        for k in vals: print(str(CONV[k])+"  ", end="")
-        print("")
+        vals = []
+        h=0
+        t=0
+        while h < len(s):
+            if s[h:t] in CONV:
+                vals.append(s[h:t])
+                h=t-1
+            if t < len(s):
+                t +=1
+            else:
+                h += 1
+                t = h
         temp = "" + str(CONV[vals[0]])+str(CONV[vals[-1]])
-        print(temp)
         result += int(temp)
 
     answer = str(result)
