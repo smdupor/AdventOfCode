@@ -9,7 +9,7 @@ import os
 def get_puzzle_input(day: str):
     cookies = bc.chrome()
 
-    url = f"https://adventofcode.com/2023/day/{str(day)}/input"
+    url = f"https://adventofcode.com/2024/day/{str(day)}/input"
 
     try:
         response = requests.get(url, cookies=cookies)
