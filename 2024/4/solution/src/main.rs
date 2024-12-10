@@ -11,6 +11,7 @@ fn parse(filename: &str) -> (Vec<Vec<char>>, usize) {
     for _k in 0..3 {
         ary.push(Vec::<char>::new());
         for _i in 0..length {
+            // Pad the array so we don't ever have to think about bounds.
             let idx = ary.len() - 1;
             ary[idx].push('.');
         }
@@ -20,19 +21,24 @@ fn parse(filename: &str) -> (Vec<Vec<char>>, usize) {
         ary.push(Vec::<char>::new());
         let idx = ary.len() - 1;
         for _k in 0..3 {
+            // Pad the array so we don't ever have to think about bounds.
             ary[idx].push('.');
         }
 
         for ch in line.chars() {
+            // Push actual char.
             ary[idx].push(ch);
         }
         for _k in 0..3 {
+            // Pad the array so we don't ever have to think about bounds.
             ary[idx].push('.');
         }
     }
+
     for _k in 0..3 {
         ary.push(Vec::<char>::new());
         for _i in 0..length {
+            // Pad the array so we don't ever have to think about bounds.
             let idx = ary.len() - 1;
             ary[idx].push('.');
         }
@@ -40,6 +46,7 @@ fn parse(filename: &str) -> (Vec<Vec<char>>, usize) {
     return (ary, length);
 }
 
+// Part 1: Based on a direction given by iw, jw, walk in search of xmas cheer.
 fn test(
     ary: &Vec<Vec<char>>,
     i: i64,
@@ -48,23 +55,23 @@ fn test(
     jw: i64,
     ary2: &mut Vec<Vec<char>>,
 ) -> usize {
-    // println!("i{} j{} iw {} jw{} eval {} , {}", i, j, iw, jw, );
     if ary[(i + (0 * iw)) as usize][(j + (0 * jw)) as usize] != 'X' {
-        // println!("{} != X", ary[(i + (0 * iw)) as usize][(i + (0 * iw)) as usize]);
         return 0;
     }
-    // print!("p!");
+
     if ary[(i + (1 * iw)) as usize][(j + (1 * jw)) as usize] != 'M' {
         return 0;
     }
-    // print!("p!");
+
     if ary[(i + (2 * iw)) as usize][(j + (2 * jw)) as usize] != 'A' {
         return 0;
     }
-    // print!("p!");
+
     if ary[(i + (3 * iw)) as usize][(j + (3 * jw)) as usize] != 'S' {
         return 0;
     }
+
+    // Debug/Breadcrumbs
     ary2[(i + (0 * iw)) as usize][(j + (0 * jw)) as usize] = '_';
     ary2[(i + (1 * iw)) as usize][(j + (1 * jw)) as usize] = '_';
     ary2[(i + (2 * iw)) as usize][(j + (2 * jw)) as usize] = '_';
@@ -73,6 +80,7 @@ fn test(
     return 1;
 }
 
+// Part 1: Walk in all 8 directions.
 fn check(ary: &Vec<Vec<char>>, i: i64, j: i64, ary2: &mut Vec<Vec<char>>) -> usize {
     return test(ary, i, j, 0, -1, ary2)
         + test(ary, i, j, 0, 1, ary2)
@@ -84,6 +92,7 @@ fn check(ary: &Vec<Vec<char>>, i: i64, j: i64, ary2: &mut Vec<Vec<char>>) -> usi
         + test(ary, i, j, -1, 1, ary2);
 }
 
+// Part 2: Simply check for pattern.
 fn check_p2(ary: &Vec<Vec<char>>, i: i64, j: i64) -> usize {
     if ary[i as usize][j as usize] == 'S'
         && ary[(i + 2) as usize][j as usize] == 'M'
@@ -129,6 +138,7 @@ fn main() -> io::Result<()> {
     let mut total_p2: usize = 0;
     let mut ary2 = ary.clone();
 
+    // Part 1
     for i in 3..ary.len() - 3 {
         for j in 3..length - 3 {
             total += check(
@@ -140,6 +150,7 @@ fn main() -> io::Result<()> {
         }
     }
 
+    // Part 2
     for i in 3..ary.len() - 3 {
         for j in 3..length - 3 {
             total_p2 += check_p2(&ary, i.try_into().unwrap(), j.try_into().unwrap());
