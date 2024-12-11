@@ -60,7 +60,7 @@ fn turn(id: i64, jd: i64) -> (i64, i64) {
         return (-1, 0);
     }
     if id == -1 && jd == 0 {
-        // left
+        // up
         return (0,1);
     }
     return (15000,15000);
@@ -78,9 +78,11 @@ fn adv(ary: &mut Vec<Vec<char>>, i: i64, j: i64, mut id: i64, mut jd:i64) -> (i6
 }
 
 fn main() -> io::Result<()> {
-    let (mut ary, _) = parse("data");
+    let filen = "data";
+    let (mut ary, _) = parse(filen);
     let mut total: usize = 0;
-    // let mut total_p2: usize = 0;
+    
+    let mut total_p2: usize = 0;
 
     let mut i:i64 = 0;
     let mut j:i64 = 0;
@@ -99,6 +101,9 @@ fn main() -> io::Result<()> {
         }
     }
 
+    let imm: i64 = i;
+    let jmm: i64 = j;
+
     while !done {
         (i, j, id, jd, done) = adv(&mut ary, i, j, id, jd);
     }
@@ -110,8 +115,38 @@ fn main() -> io::Result<()> {
             }
         }
     }
+        let (ary3,_) = parse(filen);
+
+        // Part 2
+        for ik in 1..ary3.len() - 1 {
+            println!("Test Row {}", ik);
+            for jk in 1..(ary3[ik as usize].len() - 1) {
+
+                let mut ary2 = ary3.clone();
+                i = imm;
+                j = jmm;
+                let mut id:i64 = -1;
+                let mut jd:i64 = 0;
+
+                ary2[ik as usize][jk as usize] = '#';
+
+                // Truly sad way to figure out if we are stuck. If we have run enough rounds to have visited every cell, probably stuck. :-(
+                let stuck:  usize = ary2.len() * ary2.len(); 
+                let mut done: bool = false;
+                let mut count: usize =0;
+                while !done {
+                    count += 1;
+                    (i, j, id, jd, done) = adv(&mut ary2, i, j, id, jd);
+                    if count >= stuck {
+                        total_p2 += 1;
+                        break;
+                    }
+                }
+
+           }
+        }
 
     println!("Answer Part 1: {}", total);
-    // println!("Answer Part 2: {}", total_p2);
+    println!("Answer Part 2: {}", total_p2);
     Ok(())
 }
